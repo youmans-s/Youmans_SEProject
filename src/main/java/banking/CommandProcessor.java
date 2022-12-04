@@ -1,11 +1,14 @@
+package banking;
+
 public class CommandProcessor {
     Bank bank;
-    public CommandProcessor(Bank bank){
+
+    public CommandProcessor(Bank bank) {
         this.bank = bank;
 
     }
 
-    public void processCommand(String command){
+    public void processCommand(String command) {
         String[] splitStr = command.split(" ");
         String action = splitStr[0].toLowerCase();
 

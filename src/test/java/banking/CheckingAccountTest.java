@@ -1,8 +1,11 @@
+package banking;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class BankTest {
+class CheckingAccountTest {
+
     @BeforeEach
     void setUp() {
     }
@@ -12,18 +15,10 @@ public class BankTest {
     }
 
     @Test
-    void createAccount() {
+    void deposit() {
     }
 
     @Test
-    void processCommand() {
-    }
-
-    @Test
-    void getAccountByID() {
-    }
-
-    @Test
-    void getIndexByID() {
+    void withdraw() {
     }
 }

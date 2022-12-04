@@ -1,8 +1,9 @@
+package banking;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class DepositCommandTest {
     Bank bank;
@@ -14,14 +15,14 @@ public class DepositCommandTest {
 
 
     @Test
-    void depositIntoCheckingAccount(){
+    void depositIntoCheckingAccount() {
         Account checking = bank.createAccount("checking", 12345677, 3.4);
         bank.deposit(checking.id, 100);
         assertEquals(100, checking.balance);
     }
 
     @Test
-    void depositIntoSavingsAccount(){
+    void depositIntoSavingsAccount() {
         Account savings = bank.createAccount("checking", 12345677, 3.4);
         bank.deposit(savings.id, 100);
         assertEquals(100, savings.balance);
@@ -29,7 +30,7 @@ public class DepositCommandTest {
 
 //    @Test
 //    void savingsMaximumDeposit(){
-//        Account savings = bank.createAccount("checking", 12345677, 3.4);
+//        banking.Account savings = bank.createAccount("checking", 12345677, 3.4);
 //        // Deposit more than maximum amount into savings
 //        assertThrows(IllegalArgumentException.class, () -> {
 //            bank.deposit(savings.id, 3000);
@@ -38,7 +39,7 @@ public class DepositCommandTest {
 //
 //    @Test
 //    void checkingMaximumDeposit(){
-//        Account checking = bank.createAccount("checking", 12345677, 3.4);
+//        banking.Account checking = bank.createAccount("checking", 12345677, 3.4);
 //        assertThrows(IllegalArgumentException.class, () -> {
 //            bank.deposit(checking.id, 1001);
 //        });
@@ -46,7 +47,7 @@ public class DepositCommandTest {
 //
 //    @Test
 //    void cannotDepositIntoCDAccount(){
-//        Account cd = bank.createAccount("cd", 12345677, 3.4, 5000);
+//        banking.Account cd = bank.createAccount("cd", 12345677, 3.4, 5000);
 //        assertThrows(RuntimeException.class, () -> {
 //            bank.deposit(cd.id, 1000);
 //        });
