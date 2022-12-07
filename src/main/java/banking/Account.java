@@ -6,6 +6,10 @@ public class Account {
     double balance;
     AccountType type;
 
+    int age = 1;
+    boolean withdrewThisMonth = false;
+    boolean noMoreWithdrawals = false;
+
     public Account(int id, double apr) {
         this.id = id;
         this.apr = apr;

@@ -1,47 +1,42 @@
 package banking;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class Bank {
-
     ArrayList<Account> accountList = new ArrayList<>();
 
-
     public Account createAccount(String type, int id, double apr) {
-        isLegalAccount(id, apr);
         String accType = type.toLowerCase();
-        switch (accType) {
-            case "checking":
-                Account ca = new Account(id, apr);
-                ca.type = AccountType.CHECKING;
-                accountList.add(ca);
-                return ca;
-            case "savings":
-                Account sa = new Account(id, apr);
-                sa.type = AccountType.SAVINGS;
-                accountList.add(sa);
-                return sa;
-            default:
-                throw new IllegalArgumentException("Illegal account type for given arguments");
+        Account acc = null;
+        if (accType.equals("checking")) {
+            acc = new Account(id, apr);
+            acc.type = AccountType.CHECKING;
+            accountList.add(acc);
+        } else if (accType.equals("savings")) {
+            acc = new Account(id, apr);
+            acc.type = AccountType.SAVINGS;
+            accountList.add(acc);
         }
+
+        System.out.println("Created " + accType + " account with ID: " + id);
+        return acc;
     }
 
     public Account createAccount(String type, int id, double apr, double startingAmount) {
-        isLegalAccount(id, apr);
         String accType = type.toLowerCase();
-        if (accType.equals("cd")) {
-            Account cd = new Account(id, apr, startingAmount);
-            cd.type = AccountType.CD;
-            accountList.add(cd);
-            return cd;
-        } else {
-            throw new IllegalArgumentException("Illegal account type for given arguments");
-        }
+        Account cd = new Account(id, apr, startingAmount);
+        cd.type = AccountType.CD;
+        accountList.add(cd);
+        System.out.println("Created " + accType + " account with ID: " + id);
+        return cd;
     }
 
     public void deposit(int id, double amount) {
         getAccountByID(id).balance += amount;
+        System.out.println("Deposited " + amount + " into " + id);
     }
 
     public void withdraw(int id, double amount) {
@@ -50,29 +45,42 @@ public class Bank {
         } else {
             getAccountByID(id).balance -= amount;
         }
+        getAccountByID(id).withdrewThisMonth = true;
+        if(getAccountByID(id).type == AccountType.CD){
+            getAccountByID(id).noMoreWithdrawals = true;
+        }
+        System.out.println("Withdrew " + amount + " from " + id);
     }
 
     public void transfer(int fromID, int toID, double amount) {
         getAccountByID(fromID).balance -= amount;
         getAccountByID(toID).balance += amount;
+
+        System.out.println("Transferred " + amount + " from " + fromID + " to " + toID);
     }
 
     public void passTime(int months) {
+
         for (int i = 0; i < months; i++) {
-            for (Account acc : accountList) {
-                // If balance below 0, close account
-                if (acc.balance == 0) {
-                    accountList.remove(acc);
+            for (int j = 0; j < this.accountList.size(); j++) {
+                this.accountList.get(j).age ++;
+                this.accountList.get(j).withdrewThisMonth = false;
+                if (this.accountList.get(j).balance < 100 && this.accountList.get(j).balance > 0) {
+                    this.accountList.get(j).balance -= 25;
                 }
-                if (acc.balance < 100) {
-                    acc.balance -= 25;
+                if (this.accountList.get(j).balance <= 0) {
+                    System.out.println("Removing account " + this.accountList.get(j).id + " in coming pass");
+                    this.accountList.remove(j);
                 }
-                calculateAPR();
             }
+            calculateAPR();
+
         }
+        System.out.println("Passed " + months + " months");
     }
 
     public void calculateAPR() {
+        DecimalFormat f = new DecimalFormat("##.00");
         for (Account acc : accountList) {
             double dec = acc.apr / 100;
             dec /= 12;
@@ -81,6 +89,7 @@ public class Bank {
                 acc.balance += (acc.balance * dec);
                 acc.balance += (acc.balance * dec);
                 acc.balance += (acc.balance * dec);
+                acc.balance = Double.parseDouble(f.format(acc.balance));
             } else {
                 acc.balance += (acc.balance * dec);
             }
@@ -95,33 +104,5 @@ public class Bank {
             }
         }
         return null;
-    }
-
-    public int getIndexByID(int id) {
-        for (Account acc : accountList) {
-            if (acc.id == id) {
-                return accountList.indexOf(acc);
-            }
-        }
-        return -1;
-    }
-
-    public void isLegalAccount(int id, double apr) {
-        // ID is 8 digits long
-        if (String.valueOf(id).length() != 8) {
-            throw new IllegalArgumentException("Illegal ID");
-        }
-
-        // Valid APR value
-        if (apr < 0 || apr > 10) {
-            throw new IllegalArgumentException("Illegal APR");
-        }
-
-        // ID is not duplicate
-        for (Account a : accountList) {
-            if (a.id == id) {
-                throw new IllegalArgumentException("Duplicate ID");
-            }
-        }
     }
 }
